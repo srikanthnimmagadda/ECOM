@@ -1,8 +1,17 @@
+using ECOM.Core.Interfaces;
+using ECOM.Infrastructure.Data;
+using ECOM.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<EComDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EComConnection")));
 
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
