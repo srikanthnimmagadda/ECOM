@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ECOM.Core.Entities;
+using ECOM.Infrastructure.EntityConfiguration;
+using System.Reflection;
 
 namespace ECOM.Infrastructure.Data
 {
@@ -18,5 +20,16 @@ namespace ECOM.Infrastructure.Data
         /// 
         /// </summary>
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductBrand> ProductBrands { get; set; }
+        public DbSet<ProductType> ProductTypes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            //builder.ApplyConfiguration(new ProductEntityConfiguration());
+            //builder.ApplyConfiguration(new ProductBrandEntityConfiguration());
+            //builder.ApplyConfiguration(new ProductTypeEntityConfiguration());
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
     }
 }

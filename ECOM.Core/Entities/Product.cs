@@ -1,29 +1,48 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECOM.Core.Entities
 {
-    public class Product
+    public class Product : BaseEntity<int>
     {
         /// <summary>
         /// 
         /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [StringLength(100)]
         public string Name { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [StringLength(2000)]
         public string Description { get; set; }
 
-        //public ProductType ProductType { get; set; }
-        //public int ProductTypeId { get; set; }
-        //public ProductBrand ProductBrand { get; set; }
-        //public int ProductBrandId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public decimal Price { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string PictureUrl { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ProductType ProductType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ProductTypeId { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ProductBrand ProductBrand { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ProductBrandId { get; set; }
     }
 }

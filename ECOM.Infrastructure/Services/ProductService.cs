@@ -2,18 +2,20 @@
 using ECOM.Core.Interfaces;
 using ECOM.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECOM.Infrastructure.Services
 {
     public class ProductService : IProductService
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly EComDbContext _dbContext;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbContext"></param>
         public ProductService(EComDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -26,7 +28,10 @@ namespace ECOM.Infrastructure.Services
         /// <returns></returns>
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _dbContext.Products.FindAsync(id);
+            return await _dbContext.Products
+                .Include(p => p.ProductType)
+                .Include(p => p.ProductBrand)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         /// <summary>
@@ -35,7 +40,28 @@ namespace ECOM.Infrastructure.Services
         /// <returns></returns>
         public async Task<IReadOnlyList<Product>> GetProductsAsync()
         {
-            return await _dbContext.Products.ToListAsync();
+            return await _dbContext.Products
+                .Include(p => p.ProductType)
+                .Include(p => p.ProductBrand)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync()
+        {
+            return await _dbContext.ProductBrands.ToListAsync();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IReadOnlyList<ProductType>> GetProductTypesAsync()
+        {
+            return await _dbContext.ProductTypes.ToListAsync();
         }
     }
 }

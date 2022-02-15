@@ -24,7 +24,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+SeedDatabase();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -32,3 +32,24 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+async void SeedDatabase()
+{
+    using (IServiceScope? scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        try
+        {
+            var context = services.GetRequiredService<EComDbContext>();
+            await context.Database.MigrateAsync();
+            await EComDataSeed.SeedAsync(context, loggerFactory);
+        }
+        catch (Exception exception)
+        {
+            var logger = loggerFactory.CreateLogger<Program>();
+            logger.LogError(exception, "An error occurred during migration");
+        }
+    }
+}

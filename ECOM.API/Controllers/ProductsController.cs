@@ -1,4 +1,5 @@
-﻿using ECOM.Core.Interfaces;
+﻿using ECOM.Core.Entities;
+using ECOM.Core.Interfaces;
 using ECOM.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,26 @@ namespace ECOM.API.Controllers
         {
             var products = await _productService.GetProductByIdAsync(id);
             return Ok(products);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
+        {
+            return Ok(await _productService.GetProductBrandsAsync());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("types")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetTypes()
+        {
+            return Ok(await _productService.GetProductTypesAsync());
         }
     }
 }

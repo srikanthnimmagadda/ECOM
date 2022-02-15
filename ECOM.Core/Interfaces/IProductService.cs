@@ -16,7 +16,17 @@ namespace ECOM.Core.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<IReadOnlyList<Product>> GetProductsAsync();
-        //Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync();
-        //Task<IReadOnlyList<ProductType>> GetProductTypesAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyList<ProductType>> GetProductTypesAsync();
     }
 }
