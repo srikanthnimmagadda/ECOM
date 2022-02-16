@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ECOM.API.Dto;
+using ECOM.API.Errors;
+using ECOM.API.Helpers;
 using ECOM.Core.Entities;
 using ECOM.Core.Interfaces;
 using ECOM.Core.Specifications;
@@ -7,9 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECOM.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : ApiBaseController
     {
         private readonly IGenericService<ProductBrand, int> _productBrandService;
         private readonly IMapper _mapper;
@@ -32,14 +32,15 @@ namespace ECOM.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetProducts([FromQuery] ProductSpecParams productParams)
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams productParams)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
             var countSpec = new ProductsWithFiltersForCountSpecification(productParams);
             var totalItems = await _productService.CountAsync(countSpec);
             var products = await _productService.ListAsync(spec);
             var productsToReturn = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
-            return Ok(productsToReturn);
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex,
+                productParams.PageSize, totalItems, productsToReturn));
         }
 
         /// <summary>
@@ -47,10 +48,13 @@ namespace ECOM.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
             var product = await _productService.GetEntityWithSpec(spec);
+            if (product == null) return NotFound(new ApiResponse(404));
             var productToReturn = _mapper.Map<ProductToReturnDto>(product);
             return Ok(productToReturn);
         }
