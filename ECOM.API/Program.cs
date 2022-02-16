@@ -1,7 +1,7 @@
+using ECOM.API.Extensions;
 using ECOM.API.Helpers;
-using ECOM.Core.Interfaces;
+using ECOM.API.Middleware;
 using ECOM.Infrastructure.Data;
-using ECOM.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -12,8 +12,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddDbContext<EComDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EComConnection")));
 
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped(typeof(IGenericService<,>), (typeof(GenericService<,>)));
+builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,6 +21,7 @@ builder.Services.AddSwaggerGen();
 
 
 WebApplication app = builder.Build();
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -29,6 +29,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
 SeedDatabase();
 app.UseHttpsRedirection();
 app.UseRouting();

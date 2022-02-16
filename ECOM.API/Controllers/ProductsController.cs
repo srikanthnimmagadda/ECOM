@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ECOM.API.Dto;
+using ECOM.API.Errors;
 using ECOM.Core.Entities;
 using ECOM.Core.Interfaces;
 using ECOM.Core.Specifications;
@@ -7,9 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECOM.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : ApiBaseController
     {
         private readonly IGenericService<ProductBrand, int> _productBrandService;
         private readonly IMapper _mapper;
@@ -47,10 +46,13 @@ namespace ECOM.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
             var product = await _productService.GetEntityWithSpec(spec);
+            if (product == null) return NotFound(new ApiResponse(404));
             var productToReturn = _mapper.Map<ProductToReturnDto>(product);
             return Ok(productToReturn);
         }
