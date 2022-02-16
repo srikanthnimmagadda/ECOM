@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECOM.API.Dto;
 using ECOM.API.Errors;
+using ECOM.API.Helpers;
 using ECOM.Core.Entities;
 using ECOM.Core.Interfaces;
 using ECOM.Core.Specifications;
@@ -31,14 +32,15 @@ namespace ECOM.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetProducts([FromQuery] ProductSpecParams productParams)
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams productParams)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
             var countSpec = new ProductsWithFiltersForCountSpecification(productParams);
             var totalItems = await _productService.CountAsync(countSpec);
             var products = await _productService.ListAsync(spec);
             var productsToReturn = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
-            return Ok(productsToReturn);
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex,
+                productParams.PageSize, totalItems, productsToReturn));
         }
 
         /// <summary>

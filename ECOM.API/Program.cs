@@ -18,6 +18,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+    });
+});
 
 
 WebApplication app = builder.Build();
@@ -40,7 +47,7 @@ app.UseStaticFiles();
 //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
 //    RequestPath = "/content"
 //});
-
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
