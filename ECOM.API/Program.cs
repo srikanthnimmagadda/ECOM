@@ -3,6 +3,7 @@ using ECOM.API.Helpers;
 using ECOM.API.Middleware;
 using ECOM.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -42,11 +43,11 @@ SeedDatabase();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseStaticFiles();
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
-//    RequestPath = "/content"
-//});
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+    RequestPath = "/content"
+});
 app.UseCors("CorsPolicy");
 app.UseAuthorization();
 app.MapControllers();
