@@ -15,6 +15,7 @@ namespace ECOM.API.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IBasketService, BasketService>();
             services.AddScoped(typeof(IGenericService<,>), (typeof(GenericService<,>)));
 
             services.Configure<ApiBehaviorOptions>(options =>
