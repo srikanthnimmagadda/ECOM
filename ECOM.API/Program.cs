@@ -4,6 +4,7 @@ using ECOM.API.Middleware;
 using ECOM.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using StackExchange.Redis;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,12 @@ builder.Services.AddAutoMapper(typeof(MappingProfiles));
 // Add services to the container.
 builder.Services.AddDbContext<EComDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EComConnection")));
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(c =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true);
+    return ConnectionMultiplexer.Connect(configuration);
+});
 
 builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
