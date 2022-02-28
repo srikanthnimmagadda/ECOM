@@ -14,6 +14,7 @@ namespace ECOM.API.Extensions
         /// <returns></returns>
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped(typeof(IGenericService<,>), (typeof(GenericService<,>)));

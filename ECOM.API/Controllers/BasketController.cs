@@ -31,7 +31,6 @@ namespace ECOM.API.Controllers
         public async Task<ActionResult<CustomerBasket>> GetBasketById(string id)
         {
             var basket = await _basketService.GetBasketAsync(id);
-
             return Ok(basket ?? new CustomerBasket(id));
         }
 
@@ -41,10 +40,10 @@ namespace ECOM.API.Controllers
         /// <param name="basket"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<CustomerBasket>> UpdateBasket(CustomerBasket basket)
+        public async Task<ActionResult<CustomerBasket>> UpdateBasket(CustomerBasketDto basket)
         {
-           // var customerBasket = _mapper.Map<CustomerBasket>(basket);
-            var updatedBasket = await _basketService.UpdateBasketAsync(basket);
+           var customerBasket = _mapper.Map<CustomerBasketDto,CustomerBasket>(basket);
+            var updatedBasket = await _basketService.UpdateBasketAsync(customerBasket);
             return Ok(updatedBasket);
         }
 
