@@ -1,0 +1,2 @@
+﻿Add-Migration IdentityInitialSetup -p ECOM.Infrastructure -s ECOM.API -c AppIdentityDbContext -o Identity/Migrations
+Update-Database -Context AppIdentityDbContext
