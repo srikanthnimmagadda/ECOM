@@ -1,4 +1,5 @@
 ﻿using ECOM.Core.Entities;
+using ECOM.Core.Entities.OrderAggregate;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Text.Json;
@@ -49,6 +50,20 @@ namespace ECOM.Infrastructure.Data
                     {
                         item.Id = 0;
                         context.Products.Add(item);
+                    }
+
+                    await context.SaveChangesAsync();
+                }
+
+                if (!context.DeliveryMethods.Any())
+                {
+                    var dmData = File.ReadAllText(@"../ECOM.Infrastructure/Data/DataSeed/delivery.json");
+                    var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(dmData);
+
+                    foreach (var item in deliveryMethods)
+                    {
+                        item.Id = 0;
+                        context.DeliveryMethods.Add(item);
                     }
 
                     await context.SaveChangesAsync();
