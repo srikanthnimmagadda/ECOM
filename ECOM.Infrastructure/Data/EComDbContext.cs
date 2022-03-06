@@ -2,6 +2,7 @@
 using ECOM.Core.Entities;
 using ECOM.Infrastructure.EntityConfiguration;
 using System.Reflection;
+using ECOM.Core.Entities.OrderAggregate;
 
 namespace ECOM.Infrastructure.Data
 {
@@ -22,6 +23,9 @@ namespace ECOM.Infrastructure.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

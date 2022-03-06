@@ -17,7 +17,9 @@ namespace ECOM.API.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBasketService, BasketService>();
-            services.AddScoped(typeof(IGenericService<,>), (typeof(GenericService<,>)));
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
 
             services.Configure<ApiBehaviorOptions>(options =>
             {

@@ -2,6 +2,7 @@ using AutoMapper;
 using ECOM.API.Dto;
 using ECOM.Core.Entities;
 using ECOM.Core.Entities.Identity;
+using ECOM.Core.Entities.OrderAggregate;
 
 namespace ECOM.API.Helpers
 {
@@ -16,6 +17,15 @@ namespace ECOM.API.Helpers
             CreateMap<Address, AddressDto>().ReverseMap();
             CreateMap<CustomerBasketDto, CustomerBasket>();
             CreateMap<BasketItemDto, BasketItem>();
+            CreateMap<AddressDto, OrderAddress>();
+            CreateMap<Order, OrderToReturnDto>()
+                .ForMember(d => d.DeliveryMethod, o => o.MapFrom(s => s.DeliveryMethod.ShortName))
+                .ForMember(d => d.ShippingPrice, o => o.MapFrom(s => s.DeliveryMethod.Price));
+            CreateMap<OrderItem, OrderItemDto>()
+                .ForMember(d => d.ProductId, o => o.MapFrom(s => s.ItemOrdered.ProductItemId))
+                .ForMember(d => d.ProductName, o => o.MapFrom(s => s.ItemOrdered.ProductName))
+                .ForMember(d => d.PictureUrl, o => o.MapFrom(s => s.ItemOrdered.PictureUrl))
+                .ForMember(d => d.PictureUrl, o => o.MapFrom<OrderItemUrlResolver>());
         }
     }
 }
